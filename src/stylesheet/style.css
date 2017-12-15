@@ -1,0 +1,118 @@
+#content {
+  width: 200px;
+}
+
+.inputDateField {
+  width: 100%;
+}
+
+tbody td {
+  cursor: pointer;
+  text-align: center;
+  padding-top: 2px;
+  padding-bottom: 2px;
+}
+
+tbody td:hover {
+  background-color: rgba(100, 100, 100, 0.9);
+  border-radius: 20px;
+}
+
+.thisDate {
+  color: white;
+}
+
+.otherDate {
+  color: grey;
+}
+
+.toDate {
+  background-color: rgba(200, 78, 68, 1);
+  border-radius: 9px;
+}
+
+.widget-block {
+  background-color: rgba(30, 30, 30, 0.9);
+  color: white;
+  font-size: 12px;
+}
+
+.div-navbar {
+
+  position: relative;
+  width: 100%;
+  font-size: 14px;
+  height: 36px;
+  background-color: rgba(100, 100, 100, 0.6);
+  vertical-align: middle;
+}
+
+.div-gliphicon {
+  padding-top: 9px;
+  height: 100%;
+  width: 20%;
+  text-align: center;
+  cursor: pointer;
+  float: left;
+  vertical-align: middle;
+}
+
+.div-gliphicon:hover {
+  background-color: rgba(100, 100, 100, 0.9);
+}
+
+.div-range {
+  padding-top: 9px;
+  height: 100%;
+  width: 60%;
+  text-align: center;
+  cursor: pointer;
+  float: left;
+  vertical-align: middle;
+}
+
+.div-range:hover {
+  background-color: rgba(100, 100, 100, 0.9);
+}
+
+.div-content {
+  padding: 10px;
+  height: 160px;
+}
+
+.content-header {
+  text-align: center;
+}
+
+.content-table {
+  width: 100%;
+  height: 100%;
+}
+
+.footerCalendar {
+  text-align: center;
+  padding-top: 6px;
+  padding-bottom: 6px;
+}
+
+.btn-calendar {
+  height: 25px;
+  width: 80px;
+  border-radius: 15px;
+  background-color: black;
+  border: 0;
+  outline: none;
+}
+
+.btn-calendar:hover {
+  border-top-color: #374854;
+  background: #374854;
+}
+
+.btn-calendar:active {
+  position: relative;
+  border-top-color: #374854;
+  background: #374854;
+  top:1px;
+  left:1px;
+}

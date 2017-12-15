@@ -1,0 +1,88 @@
+import React from "react";
+import CalendarTable from "./View";
+
+export default class DatePicker extends React.Component {
+  constructor(props) {
+    super(props);
+
+    const currentDate = this.getNewDate();
+    const month = this.getMonthView(currentDate);
+
+    this.state = {
+      month,
+      year_range: null,
+      currentDate,
+      // actualView: null,
+      viewType: 'month',
+    };
+  }
+
+  getNewDate(date = new Date()) {
+    const monthList = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August',
+									'September','October', 'November', 'December'];
+
+    return {
+      day: parseInt(date.getDate()),
+  	  month: parseInt(date.getMonth()),
+  	  monthText: monthList[date.getMonth()].slice(0, 3),
+    	year: parseInt(date.getFullYear()),
+    };
+  }
+
+  setNewDate(date) {
+    this.setState({
+      currentDate: this.getNewDate(date),
+    });
+  }
+
+  getMonthView(currentDate) {
+    // const { currentDate } = this.state;
+  	const month = [[],[],[],[],[],[]];
+
+  	var date = new Date(currentDate.year, currentDate.month, 1);
+  	if(parseInt(date.getDay()) === 0) {
+  		date = new Date(currentDate.year, currentDate.month, parseInt(date.getDate())-7);
+  	} else {
+  		date = new Date(currentDate.year, currentDate.month, date.getDate() - date.getDay());
+  	}
+
+  	for(var i = 0; i < 6; i += 1) {
+  			for(var j = 0; j < 7; j += 1) {
+  				month[i].push({
+  					value: parseInt(date.getDate()),
+  					isActive: (parseInt(currentDate.month) === parseInt(date.getMonth()) ? 'thisDate' : 'otherDate')
+  				});
+  				date = new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1);
+  			}
+  		}
+
+    return month;
+  }
+
+  setMonthView() {
+    this.setState(prevState => ({
+      month: this.getMonthView(prevState.currentDate),
+    }));
+  }
+
+  render() {
+
+    const	year = [
+    	[{value:'Jan', isActive:'otherDate'}, {value:'Feb', isActive:'otherDate'}, {value:'Mar', isActive:'otherDate'}] ,
+    	[{value:'Apr', isActive:'otherDate'}, {value:'May', isActive:'otherDate'}, {value:'Jun', isActive:'otherDate'}] ,
+    	[{value:'Jul', isActive:'otherDate'}, {value:'Aug', isActive:'otherDate'}, {value:'Sep', isActive:'otherDate'}] ,
+    	[{value:'Oct', isActive:'otherDate'}, {value:'Nov', isActive:'otherDate'}, {value:'Dec', isActive:'otherDate'}]
+    ];
+
+
+    return (
+      <CalendarTable
+        // year={year}
+
+        {...this.state}
+
+        setMonthView={this.setMonthView}
+      />
+    );
+  }
+}

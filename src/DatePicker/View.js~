@@ -1,0 +1,217 @@
+// var React = require('react');
+// var ReactDOM = require('react-dom');
+// var Tr = require('./calendarRow');
+// var controller = require('../controllers/flux_store_disp_modul');
+
+import React from "react";
+
+const Td = props => {
+  let toDateClass = '';
+  switch (props.viewType) {
+    case 'month':
+      if(props.callData.isActive == 'thisDate') {
+        toDateClass = props.callData.value == props.currentDate.day ? 'toDate' : '';
+      }
+    break;
+
+    case 'year':
+      if(props.callData.value === props.currentDate.monthText) {
+        toDateClass = 'toDate';
+      }
+
+    break;
+
+    case 'year-range':
+      toDateClass = props.callData.value == props.currentDate.year ? 'toDate' : '';
+    break;
+
+    default:
+    break;
+  }
+
+  return (
+    <td
+      className = {(props.viewType === 'month' ? props.callData.isActive +" "+toDateClass : toDateClass)}
+    
+      onClick = {props.handleTdClick}>
+      {props.callData.value}
+    </td>
+  );
+}
+
+
+
+// React.createClass({
+//   // - handle click day -
+//   handleTdClick: function() {
+//
+//     controller.Dispatcher.dispatch({
+//       eventName: 'changeDate',
+//       item: {cellValue: this.props.callData.value, isActive: this.props.callData.isActive}
+//     });
+//   },
+//   render: function() {
+//     var toDateClass = '';
+//     switch(this.props.viewType) {
+//       case 'month':
+//         if(this.props.callData.isActive == 'thisDate') {
+//           toDateClass = this.props.callData.value == this.props.currentDate.day ? 'toDate' : '';
+//         }
+//       break;
+//
+//       case 'year':
+//         if(this.props.callData.value === this.props.currentDate.monthText) {
+//           toDateClass = 'toDate';
+//         }
+//
+//       break;
+//
+//       case 'year-range':
+//         toDateClass = this.props.callData.value == this.props.currentDate.year ? 'toDate' : '';
+//       break;
+//
+//       default:
+//       break;
+//     }
+//
+//     return (
+//       <td
+//         className = {(this.props.viewType === 'month' ? this.props.callData.isActive +" "+toDateClass : toDateClass)}
+//         ref = 'cell'
+//         onClick = { this.handleTdClick }>
+//         {this.props.callData.value}
+//       </td>
+//     );
+//   }
+// });
+
+
+const Tr = props => {
+  const { viewType, currentDate } = props;
+  console.log('****>', props.rowData)
+  const tdList = props.rowData.map((value, index) => (
+    <Td currentDate={currentDate} viewType={viewType} callData={value} key={index} />
+  ));
+
+  return <tr>{tdList}</tr>;
+}
+
+const thead = () => (
+  <thead>
+    <tr>
+      <td>SU</td>
+      <td>MO</td>
+      <td>TU</td>
+      <td>WE</td>
+      <td>TH</td>
+      <td>FR</td>
+      <td>SA</td>
+    </tr>
+  </thead>
+);
+
+
+const CalendarTable = props => {
+  // handlerNext: function() {
+  // 	controller.Dispatcher.dispatch({
+  // 		eventName: 'dateNext',
+  //     item: {month: controller.Store.getCurrentDate().month}
+  // 	});
+  // },
+  //
+  // handlePrevious: function() {
+  // 	controller.Dispatcher.dispatch({
+  // 		eventName: 'datePrev',
+  //     item: {month: controller.Store.getCurrentDate().month}
+  // 	});
+  // },
+  //
+  // handleChangeView: function() {
+  // 	controller.Dispatcher.dispatch({
+  // 		eventName: 'changeView',
+  // 	});
+  // },
+  //
+  // handleToDayButton: function() {
+  // 	controller.Dispatcher.dispatch({
+  // 		eventName: 'toDayButton'
+  // 	});
+  // },
+  console.log('--->', props);
+  // render: function() {
+  const trList = props.month.map(function(value, index) {
+    console.log('::::::>',value);
+  	return (<Tr currentDate={props.currentDate} viewType={props.viewType} rowData={value} key={index} />);
+  });
+
+  // var thead;
+
+  // if (controller.Store.getActualViewType() === 'month') {
+  // 	thead = <thead>
+  // 		<tr>
+  // 			<td>SU</td>
+  // 			<td>MO</td>
+  // 			<td>TU</td>
+  // 			<td>WE</td>
+  // 			<td>TH</td>
+  // 			<td>FR</td>
+  // 			<td>SA</td>
+  // 		</tr>
+  // 	</thead>;
+  // }
+
+  // const thead = (controller.Store.getActualViewType() === 'month')
+  //   ? Thead()
+  //   : null;
+
+
+  return (
+  	<div className='widget-block'>
+  		<div className='div-navbar'>
+  			<div
+  				className='div-gliphicon'
+  				onClick={this.handlePrevious}>
+  				<span
+  					className="glyphicon glyphicon-menu-left"
+  					aria-hidden='true'>
+  				</span>
+  			</div>
+  			<div
+  				className='div-range'
+  				onClick={this.handleChangeView}>
+  				<span>
+  					may
+  				</span>
+  			</div>
+  			<div
+  				className='div-gliphicon'
+  				onClick={this.handlerNext}
+  				>
+  				<span
+  					className="glyphicon glyphicon-menu-right"
+  					aria-hidden='true'>
+  				</span>
+  			</div>
+  		</div>
+  		<div className='div-content'>
+  			<table className='content-table'>
+  				{props.viewType === 'month' && thead()}
+  				<tbody>
+  					{trList}
+  				</tbody>
+  			</table>
+  		</div>
+  		{/* <div
+  			className = 'footerCalendar'>
+  			<button
+  				type='button'
+  				className='btn-calendar'
+  				onClick={this.handleToDayButton}>
+  					Today
+  			</button>
+  		</div> */}
+  	</div>
+  );
+}
+
+export default CalendarTable;
