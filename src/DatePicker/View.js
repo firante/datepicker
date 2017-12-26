@@ -41,7 +41,7 @@ const Td = props => {
 
   return (
     <td
-       className = {(props.viewType === 'month' ? props.callData.isActive +" "+toDateClass : toDateClass)}
+       className = {(props.viewType === 'month' ? props.callData.isActive : toDateClass)}
        
        onClick = {props.handleTdClick}>
       {props.callData.value}
@@ -55,7 +55,7 @@ const Td = props => {
 const Tr = props => {
   const { viewType, currentDate } = props;
   const tdList = props.rowData.map((value, index) => (
-    <Td currentDate={currentDate} viewType={viewType} callData={value} key={index} />
+    <Td currentDate={currentDate} viewType={viewType} callData={value} key={index}  />
   ));
 
   return <tr>{tdList}</tr>;
@@ -72,7 +72,7 @@ const CalendarTable = props => {
   });
 
   return (
-    <div className='widget-block'>
+    <div className={props.visible ? 'widget-block visible':'widget-block hidden'} >
       <div className='div-navbar'>
   	<div
   	   className='div-gliphicon'
@@ -88,6 +88,7 @@ const CalendarTable = props => {
   	  <span>
   	    {props.viewType === 'month' && `${props.currentDate.monthText} , ${props.currentDate.year}`}
 	    {props.viewType === 'year' && `${props.currentDate.year}`}
+	    {props.viewType === 'age' && `${props.age[0][0].value} - ${props.age[4][4].value}`}
   	  </span>
   	</div>
   	<div
@@ -103,22 +104,13 @@ const CalendarTable = props => {
       <div className='div-content'>
   	<table className='content-table'>
   	  {props.viewType === 'month' && thead()}
-  	  <tbody>
+  	  <tbody onClick={props.handleSelectDate}>
   	    {trList}
   	  </tbody>
   	</table>
       </div>
-      {/* <div
-  	       className = 'footerCalendar'>
-  	  <button
-  	       type='button'
-  	       className='btn-calendar'
-  	       onClick={this.handleToDayButton}>
-  	      Today
-  	    </button>
-      </div> */}
     </div>
   );
-}
+};
 
 export default CalendarTable;
