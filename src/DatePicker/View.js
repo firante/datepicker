@@ -1,15 +1,17 @@
 import React from "react";
 
-const thead = () => (
-  <thead>
-    <tr>
-      <td>SU</td>
-      <td>MO</td>
-      <td>TU</td>
-      <td>WE</td>
-      <td>TH</td>
-      <td>FR</td>
-      <td>SA</td>
+const thead = (styles={}) => (
+  <thead
+     style={styles['days-head']}
+     >
+    <tr style={styles['days-head-tr']}>
+      <td style={styles['days-head-td']}>SU</td>
+      <td style={styles['days-head-td']}>MO</td>
+      <td style={styles['days-head-td']}>TU</td>
+      <td style={styles['days-head-td']}>WE</td>
+      <td style={styles['days-head-td']}>TH</td>
+      <td style={styles['days-head-td']}>FR</td>
+      <td style={styles['days-head-td']}>SA</td>
     </tr>
   </thead>
 );
@@ -17,32 +19,42 @@ const thead = () => (
 
 const Td = props => {
   let toDateClass = '';
+  let customStyle = '';
   switch (props.viewType) {
   case 'month':
-    if(props.callData.isActive == 'thisDate') {
-      toDateClass = props.callData.value == props.currentDate.day ? 'toDate' : '';
-    }
+    toDateClass = props.callData.isActive === 'this-month'
+      ? props.callData.value === props.currentDate.day
+      ? `${props.callData.isActive} selected-date`
+      : props.callData.isActive
+    :  props.callData.isActive;
+    customStyle = props.callData.isActive === 'this-month'
+      ? props.callData.value === props.currentDate.day
+      ? { ...props.styles['this-month'], ...props.styles['selected-date'] }
+      : { ...props.styles['this-month'] }
+    :  { ...props.styles['other-month']};
+    
     break;
 
   case 'year':
-    if(props.callData.value === props.currentDate.monthText) {
-      toDateClass = 'toDate';
-    }
-
+    toDateClass = props.currentDate.monthText.startsWith(props.callData.value) ? 'selected-date' : '';
+    customStyle = props.currentDate.monthText.startsWith(props.callData.value) ? { ...props.styles['selected-date'] } : {};
     break;
 
-  case 'year-range':
-    toDateClass = props.callData.value == props.currentDate.year ? 'toDate' : '';
+  case 'age':
+    toDateClass = props.callData.value === props.currentDate.year ? 'selected-date' : '';
+    customStyle = props.callData.value === props.currentDate.year ? { ...props.styles['selected-date'] } : {};
     break;
 
   default:
     break;
+    
   }
-
   return (
     <td
-       className = {(props.viewType === 'month' ? props.callData.isActive : toDateClass)}
-       
+       onMouseOver={(e) => { props.styles['td-hover-background'].color && (e.currentTarget.style.background = props.styles['td-hover-background'].color); }}
+       onMouseOut={(e) => { props.styles['td-hover-background'].color && (e.currentTarget.style.background = 'unset'); }}
+       className={toDateClass}
+       style={{...props.styles['base-td'], ...customStyle}}
        onClick = {props.handleTdClick}>
       {props.callData.value}
     </td>
@@ -55,27 +67,30 @@ const Td = props => {
 const Tr = props => {
   const { viewType, currentDate } = props;
   const tdList = props.rowData.map((value, index) => (
-    <Td currentDate={currentDate} viewType={viewType} callData={value} key={index}  />
+    <Td styles={props.styles} currentDate={currentDate} viewType={viewType} callData={value} key={index}  />
   ));
 
   return <tr>{tdList}</tr>;
 };
 
 const CalendarTable = props => {
+  const styles = props.styles || {};
   const actualView = props.viewType === 'month'
 	  ? props.month
 	  : props.viewType === 'year'
-	    ? props.year
-	    : props.age;
+	  ? props.year
+	  : props.age;
   const trList = actualView.map(function(value, index) {
-    return (<Tr currentDate={props.currentDate} viewType={props.viewType} rowData={value} key={index} />);
+    return (<Tr styles={props.styles} currentDate={props.currentDate} viewType={props.viewType} rowData={value} key={index} />);
   });
-
   return (
-    <div className={props.visible ? 'widget-block visible':'widget-block hidden'} >
-      <div className='div-navbar'>
+    <div
+       className={props.visible ? 'widget-block visible':'widget-block hidden'}
+       style={props.styles['widget-block']}>
+      <div style={styles['date-picker-header']} className="date-picker-header">
   	<div
-  	   className='div-gliphicon'
+	   style={styles['change-arrow']}
+  	   className='change-arrow arrow-left'
   	   onClick={props.handlePrevious}>
   	  <span
   	     className="glyphicon glyphicon-menu-left"
@@ -83,7 +98,8 @@ const CalendarTable = props => {
   	  </span>
   	</div>
   	<div
-  	   className='div-range'
+	   style={styles['change-range']}
+  	   className='change-range'
   	   onClick={props.handleChangeViewType}>
   	  <span>
   	    {props.viewType === 'month' && `${props.currentDate.monthText} , ${props.currentDate.year}`}
@@ -92,7 +108,8 @@ const CalendarTable = props => {
   	  </span>
   	</div>
   	<div
-  	   className='div-gliphicon'
+	   style={styles['change-arrow']}
+  	   className='change-arrow arrow-right'
   	   onClick={props.handleNext}
   	   >
   	  <span
@@ -101,9 +118,13 @@ const CalendarTable = props => {
   	  </span>
   	</div>
       </div>
-      <div className='div-content'>
-  	<table className='content-table'>
-  	  {props.viewType === 'month' && thead()}
+      <div
+	 style={styles['main-content']}
+	 className='div-content'>
+  	<table
+	   style={styles['content-table']}
+	   className='content-table'>
+  	  {props.viewType === 'month' && thead(styles)}
   	  <tbody onClick={props.handleSelectDate}>
   	    {trList}
   	  </tbody>

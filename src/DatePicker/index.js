@@ -98,7 +98,7 @@ export default class DatePicker extends React.Component {
       for(var j = 0; j < 7; j += 1) {
   	month[i].push({
   	  value: parseInt(date.getDate()),
-  	  isActive: (parseInt(currentDate.month) === parseInt(date.getMonth()) ? 'thisDate' : 'otherDate')
+  	  isActive: (parseInt(currentDate.month) === parseInt(date.getMonth()) ? 'this-month' : 'other-month')
   	});
   	date = new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1);
       }
@@ -109,7 +109,7 @@ export default class DatePicker extends React.Component {
   // actualize age
   actualizeAge(year = this.state.currentDate.year - 12) {
     const age = [Array(5).fill(), Array(5).fill(), Array(5).fill(), Array(5).fill(), Array(5).fill()];
-    const filledAge = age.map((row, i) => row.map((_, j) => ({ value: year + (i * 5 + j), isActive: 'otherDate' })));
+    const filledAge = age.map((row, i) => row.map((_, j) => ({ value: year + (i * 5 + j), isActive: 'other-month' })));
     this.setAgeView(filledAge);
   }
 
@@ -175,7 +175,7 @@ export default class DatePicker extends React.Component {
       && this.setMonthView();
 
     if(this.state.viewType === 'month') {
-      const isCurrentMonth = e.target.classList.contains('thisDate');
+      const isCurrentMonth = e.target.classList.contains('this-month');
       isCurrentMonth && this.setNewDate(new Date(
 	this.state.currentDate.year,
 	this.state.currentDate.month,
@@ -197,15 +197,16 @@ export default class DatePicker extends React.Component {
   
   render() {
     const year = [
-      [{value:'Jan', isActive:'otherDate'}, {value:'Feb', isActive:'otherDate'}, {value:'Mar', isActive:'otherDate'}] ,
-      [{value:'Apr', isActive:'otherDate'}, {value:'May', isActive:'otherDate'}, {value:'Jun', isActive:'otherDate'}] ,
-      [{value:'Jul', isActive:'otherDate'}, {value:'Aug', isActive:'otherDate'}, {value:'Sep', isActive:'otherDate'}] ,
-      [{value:'Oct', isActive:'otherDate'}, {value:'Nov', isActive:'otherDate'}, {value:'Dec', isActive:'otherDate'}]
+      [{value:'Jan', isActive:'other-month'}, {value:'Feb', isActive:'other-month'}, {value:'Mar', isActive:'other-month'}] ,
+      [{value:'Apr', isActive:'other-month'}, {value:'May', isActive:'other-month'}, {value:'Jun', isActive:'other-month'}] ,
+      [{value:'Jul', isActive:'other-month'}, {value:'Aug', isActive:'other-month'}, {value:'Sep', isActive:'other-month'}] ,
+      [{value:'Oct', isActive:'other-month'}, {value:'Nov', isActive:'other-month'}, {value:'Dec', isActive:'other-month'}]
     ];
     return (
-      <div>
-	<input tupe="text" value={this.getSelectedDate()} onClick={this.handleOpenDatePicker} />
+      <div className="date-picker">
+	<input style={this.props.styles['date-input']} tupe="text" value={this.getSelectedDate()} onClick={this.handleOpenDatePicker} />
 	<CalendarTable
+	   {...this.props}
            year={year}
            {...this.state}
 	   handlePrevious={this.handlePrevious}
